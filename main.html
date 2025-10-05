@@ -6,7 +6,7 @@
   <title>Tic Tac Toe</title>
   <style>
     body {
-      background-color: darkslategray;
+      background-color: rgb(63, 217, 217);
       color: white;
       font-family: Arial, sans-serif;
       display: flex;
@@ -14,177 +14,150 @@
       align-items: center;
       height: 100vh;
     }
-
-    .container {
-      text-align: center;
-    }
-
-    #player-form {
+    #player {
       display: flex;
       flex-direction: column;
-      gap: 10px;
     }
-
-    input {
+    input, button {
       padding: 10px;
       border: none;
       border-radius: 5px;
       font-size: 16px;
       text-align: center;
+      margin: 5px;
     }
-
     button {
-      padding: 10px;
-      background: teal;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
+      background-color: blueviolet;
     }
-
     button:hover {
-      background: lightseagreen;
+      background-color: blue;
     }
-
-    .game {
-      display: none;
+    .hide {
+      display: none !important;
     }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .message {
-      margin-bottom: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .board {
+    #bord {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 5px;
-      justify-content: center;
+      grid-template-columns: repeat(3, 90px);
+      grid-template-rows: repeat(3, 90px);
+      gap: 8px;
     }
-
-    .cell {
+    .box {
+      border-radius: 8px;
       background-color: white;
       color: black;
-      font-size: 40px;
+      font-size: 2.5rem;
       display: flex;
-      justify-content: center;
       align-items: center;
-      cursor: pointer;
-      border-radius: 10px;
+      justify-content: center;
     }
-
-    .cell:hover {
-      background-color: lightgray;
+    .box:hover {
+      background-color: yellow;
+      box-shadow: 0 5px 10px rgba(184, 12, 12, 0.5);
+      transform: translateY(-4px);
+      transition: background 0.5s ease;
+    }
+    #total {
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Player Input Section -->
-    <div id="player-form">
-      <input type="text" id="player-1" placeholder="Enter Player 1 Name">
-      <input type="text" id="player-2" placeholder="Enter Player 2 Name">
-      <button id="submit">Submit</button>
+  <form id="form">
+    <div id="player">
+      <input required placeholder="Enter Player 1 name">
+      <input required placeholder="Enter Player 2 name">
+      <button type="submit">Open Game</button>
     </div>
+  </form>
 
-    <!-- Game Section -->
-    <div class="game">
-      <h1>Tic Tac Toe</h1>
-      <div class="message"></div>
-      <div class="board">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-        <div class="cell" id="6"></div>
-        <div class="cell" id="7"></div>
-        <div class="cell" id="8"></div>
-        <div class="cell" id="9"></div>
-      </div>
+  <div id="total" class="hide">
+    <h1>TIC TAC TOE</h1>
+    <h3 id="h3"></h3>
+    <div id="bord">
+      <div class="box" id="0"></div>
+      <div class="box" id="1"></div>
+      <div class="box" id="2"></div>
+      <div class="box" id="3"></div>
+      <div class="box" id="4"></div>
+      <div class="box" id="5"></div>
+      <div class="box" id="6"></div>
+      <div class="box" id="7"></div>
+      <div class="box" id="8"></div>
     </div>
   </div>
 
   <script>
-    const submitBtn = document.getElementById('submit');
-    const playerForm = document.getElementById('player-form');
-    const gameDiv = document.querySelector('.game');
-    const messageDiv = document.querySelector('.message');
-    const cells = document.querySelectorAll('.cell');
-
-    let player1 = '';
-    let player2 = '';
-    let currentPlayer = '';
-    let currentSymbol = 'X';
-    let gameActive = true;
-
-    // Winning patterns
-    const winPatterns = [
-      [1,2,3],
-      [4,5,6],
-      [7,8,9],
+    const form = document.getElementById("form");
+    const bord = document.getElementById("total");
+    const combinationes = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,4,8],
+      [2,4,6],
+      [0,3,6],
       [1,4,7],
-      [2,5,8],
-      [3,6,9],
-      [1,5,9],
-      [3,5,7]
+      [2,5,8]
     ];
 
-    // Submit Button Click
-    submitBtn.addEventListener('click', () => {
-      const p1 = document.getElementById('player-1').value.trim();
-      const p2 = document.getElementById('player-2').value.trim();
-
-      if (p1 === '' || p2 === '') {
-        alert('Please enter both player names!');
-        return;
-      }
-
-      player1 = p1;
-      player2 = p2;
-      currentPlayer = player1;
-      playerForm.style.display = 'none';
-      gameDiv.style.display = 'block';
-      messageDiv.textContent = `${currentPlayer}, you're up!`;
+    let ply1 = "";
+    let ply2 = "";
+    let h3 = document.getElementById("h3");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      ply1 = e.target[0].value;
+      ply2 = e.target[1].value;
+      form.classList.add("hide");
+      bord.classList.remove("hide");
+      h3.textContent = `It's ${ply1}'s turn`;
     });
 
-    // Handle Cell Click
-    cells.forEach(cell => {
-      cell.addEventListener('click', () => {
-        if (!gameActive || cell.textContent !== '') return;
+    let M;
+    let array = Array(9).fill(null);
+    let active = true;
+    let currente = "X";
+    const boxes = document.querySelectorAll(".box");
 
-        cell.textContent = currentSymbol;
+    boxes.forEach(i => {
+      i.addEventListener("click", () => {
+        if (i.textContent.length == 1 || !active) return;
 
-        if (checkWinner()) {
-          messageDiv.textContent = `${currentPlayer}, congratulations you won! 🎉`;
-          gameActive = false;
-          return;
+        if (active) {
+          i.textContent = currente;
+          array[i.id] = currente;
+
+          // Check if there is a winner
+          if (chekwinner()) {
+            h3.textContent = `Winner is ${currente === "X" ? ply1 : ply2}! 🎉`;
+            M.forEach(id => {
+              document.getElementById(id).style.background = "green";
+            });
+            active = false;
+            return;
+          }
+
+          // Check if it's a draw
+          if (array.every(cell => cell !== null)) {
+            h3.textContent = "It's a Draw! 😐";
+            active = false;
+            return;
+          }
+
+          // Switch turn
+          currente = currente == "X" ? "O" : "X";
+          h3.textContent = `It's ${currente == "X" ? ply1 : ply2}'s turn`;
         }
-
-        // Switch turn
-        currentPlayer = currentPlayer === player1 ? player2 : player1;
-        currentSymbol = currentSymbol === 'X' ? 'O' : 'X';
-        messageDiv.textContent = `${currentPlayer}, you're up!`;
       });
     });
 
-    // Check for Winner
-    function checkWinner() {
-      return winPatterns.some(pattern => {
-        const [a,b,c] = pattern;
-        return (
-          document.getElementById(a).textContent !== '' &&
-          document.getElementById(a).textContent === document.getElementById(b).textContent &&
-          document.getElementById(a).textContent === document.getElementById(c).textContent
-        );
-      });
+    function chekwinner() {
+      for (let [a, b, c] of combinationes) {
+        if (array[a] && array[a] == array[b] && array[a] == array[c]) {
+          M = [a, b, c];
+          return true;
+        }
+      }
+      return false;
     }
   </script>
 </body>
