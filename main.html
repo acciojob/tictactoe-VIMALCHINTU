@@ -110,15 +110,15 @@
   <div class="container">
     <form id="form">
       <div id="player">
-        <input required placeholder="Enter Player 1 name">
-        <input required placeholder="Enter Player 2 name">
-        <button type="submit">Start Game</button>
+        <input id="player1" required placeholder="Enter Player 1 name">
+        <input id="player2" required placeholder="Enter Player 2 name">
+        <button id="submit" type="submit">Start Game</button>
       </div>
     </form>
 
     <div id="total" class="hide">
       <h1>Tic Tac Toe</h1>
-      <h3 id="h3"></h3>
+      <h3 id="h3" class="message"></h3>
       <div id="bord">
         <div class="box" id="0"></div>
         <div class="box" id="1"></div>
@@ -150,6 +150,7 @@
     let array = Array(9).fill(null);
     let current = "X";
     let active = true;
+    let winningCombo = [];
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -157,7 +158,7 @@
       ply2 = e.target[1].value;
       form.classList.add("hide");
       bord.classList.remove("hide");
-      h3.textContent = `🎮 It's ${ply1}'s turn (X)`;
+      h3.textContent = `${ply1}, you're up`;
     });
 
     boxes.forEach(box => {
@@ -170,7 +171,6 @@
         if (checkWinner()) {
           const winner = current === "X" ? ply1 : ply2;
           h3.textContent = `🏆 ${winner}, Congratulations You Won! 🎉`;
-          document.querySelectorAll(".winner").forEach(el => el.classList.remove("winner"));
           winningCombo.forEach(id => {
             document.getElementById(id).classList.add("winner");
           });
@@ -186,11 +186,10 @@
         }
 
         current = current === "X" ? "O" : "X";
-        h3.textContent = `🎮 It's ${current === "X" ? ply1 : ply2}'s turn (${current})`;
+        h3.textContent = `${current === "X" ? ply1 : ply2}, you're up`;
       });
     });
 
-    let winningCombo = [];
     function checkWinner() {
       for (const combo of combinations) {
         const [a, b, c] = combo;
@@ -211,7 +210,7 @@
       active = true;
       current = "X";
       restart.style.display = "none";
-      h3.textContent = `🎮 It's ${ply1}'s turn (X)`;
+      h3.textContent = `${ply1}, you're up`;
     });
   </script>
 </body>
